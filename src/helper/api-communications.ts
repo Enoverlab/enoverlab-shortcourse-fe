@@ -67,3 +67,13 @@ export const getCourseDetail = async (courseId : string)=>{
     const data = response.data
     return data
 }
+
+export const confirmEmailReq = async(token: string)=>{
+    const response = await axios.get(`/auth/verifyStatus?token=${token}`)
+    if(response.status !== 200){
+        throw new Error('An Error Occurred')
+    }
+    
+    const data = response.data
+    return data
+}

@@ -13,6 +13,7 @@ import { CourseDetailProvider } from "./context/CourseDetailContext"
 import CourseEnrolled from './pages/CourseEnrolled';
 import { AuthProvider } from "./context/AuthContext";
 import axios from 'axios'
+import VerifyEmail from './components/Auth/VerifyEmail';
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 axios.defaults.withCredentials = true
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/coursedetail/:id",
         element : <CourseDetailProvider><Coursedetail/></CourseDetailProvider>
+      },
+      {
+        path : "/mail/confirm",
+        element : <VerifyEmail />
       },
       {
         path: "/auth/:authroute",
