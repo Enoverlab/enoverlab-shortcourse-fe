@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 const VerifyEmail = () => {
     const [searchParam] = useSearchParams()
-    const token = searchParam.get('token')
+    const token = searchParam.get('token')!
     const navigate = useNavigate()
     useEffect(()=>{
         if(!token){
