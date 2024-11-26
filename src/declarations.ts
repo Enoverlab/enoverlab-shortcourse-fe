@@ -15,7 +15,7 @@ export interface chapterProps extends Partial <chapterContextProps>{
 }
 
 export interface dataProps{
-    id : number,
+    _id : string,
     topic : string,
     instructorName : string,
     rating : number,
@@ -44,7 +44,24 @@ export interface signUpProp {
 export interface userprop{
     id : number,
     name : string,
-    email : string
+    email : string,
+    paidCourses : UserPaidCourse[]
+}
+
+export interface UserPaidCourse{
+    courseId: string
+
+    datePurchased: Date
+
+    userId: string
+
+    progress: [
+        {
+        moduleId: string,
+        status: boolean,
+        completedAt: Date,
+        },
+    ]
 }
 
 
@@ -55,5 +72,5 @@ export interface contextProps{
 }
 
 export interface detailHeroProps{
-    enrolled : boolean
+    enrolled ?: boolean
 }

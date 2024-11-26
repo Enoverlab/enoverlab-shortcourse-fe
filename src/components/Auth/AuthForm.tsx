@@ -7,6 +7,7 @@ import googleIcon from "../../assets/auth/google.svg"
 import  { AxiosError } from "axios"
 import { toast } from "react-toastify"
 import { useAuth } from "../../context/AuthContext"
+import SignUpVerification from "./SignUpVerification"
 
 
 const AuthForm = () => {
@@ -24,6 +25,8 @@ const AuthForm = () => {
     const [login, setLogin] = useState(false)
     const [signup, setSignup] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [verificationModal, setVerificationModal] = useState(false)
+    const [mode , setMode] = useState('')
     const {authroute} = useParams()
     const auth = useAuth()
     const ref = localStorage.getItem('ref')
@@ -44,6 +47,7 @@ const AuthForm = () => {
       navigate('404')
     }
     },[authroute, navigate])
+
     const loginInitValues = {email : "", password : ""}
     const signupInitiValues = {...loginInitValues, name :""}
     const loginValidationSchema = {
@@ -69,14 +73,8 @@ const AuthForm = () => {
               await auth?.signup(values, route)
               setTimeout(async()=>{
                 toast.update('auth', {render: "Signed Up Successfully", type: "success", isLoading: false, autoClose : 3000});
-                if(ref){
-                  navigate(ref)
-                  localStorage.removeItem('ref')
-                }
-                else{
-                  navigate('/')
-                  setLoading(false)
-                }
+                setVerificationModal(true)
+                setMode('success')
               }, 1500)
 
             } catch (error ) {
@@ -105,7 +103,7 @@ const AuthForm = () => {
 
             } catch (error ) {
               if(error instanceof AxiosError){
-                toast.error(error?.response?.data.message)
+                toast.update('auth', {render: error?.response?.data.message, type: "error", isLoading: false, autoClose : 3000});
                 setLoading(false)
               }
             }
@@ -143,7 +141,7 @@ const AuthForm = () => {
                 {msg => <div className="text-red-500 italic text-lg">{msg}</div>}
               </ErrorMessage>
             </label>
-            <button className=" bg-[#08F] border border-[#08F] w-full text-center text-white text-lg lg:text-xl font-semibold py-3 rounded-[5px] hover:bg-white hover:text-[#08F] transition-all duration-700" disabled={loading}>
+            <button className=" bg-[#08F] border border-[#08F] w-full text-center text-white text-lg lg:text-xl font-semibold py-3 rounded-[5px] hover:bg-white hover:text-[#08F] transition-all duration-700 disabled:bg-[#4d9add] disabled:hover:bg-[#4d9add] disabled:cursor-not-allowed" disabled={loading}>
               {signup ? 'Sign Up' : 'Login'}
             </button>
             <p className="text-center my-7 text-lg text-black-200">
@@ -167,6 +165,7 @@ const AuthForm = () => {
           </div>
         </Form>
       </Formik>
+      <SignUpVerification isOpen={verificationModal} handleModalClose={()=>{setVerificationModal(false)}} state={mode} />
     </div>
   )
 }

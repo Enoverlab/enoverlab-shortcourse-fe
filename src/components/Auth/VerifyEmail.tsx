@@ -16,7 +16,6 @@ const VerifyEmail = () => {
             try {
                 await confirmEmailReq(token)
                 toast.success('Email verified successfully')
-                
                 setTimeout(()=>{
                     navigate('/')
                 },1500)

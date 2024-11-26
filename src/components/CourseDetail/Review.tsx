@@ -7,7 +7,7 @@ import 'swiper/css'
 
 const Review = () => {
   return (
-    <div className="px-[6.9vw] py-14 lg:py-[109px]">
+    <div className="px-[6.9vw] py-14 lg:py-[109px]" id="review">
         <Swiper
     breakpoints={{
         1024: {

@@ -3,6 +3,7 @@ import { FaStar } from 'react-icons/fa';
 import like from '../assets/landing/like.svg'
 import share from '../assets/landing/share.svg'
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 
 interface CardProps {
@@ -10,7 +11,7 @@ interface CardProps {
     instructorName ?: string
     image ?: string
     price ?: number
-    id ?: number
+    id ?: string
 }
 interface StarProps {
   value?: number
@@ -19,7 +20,8 @@ interface StarProps {
 const Card = ({topic, instructorName, image, price,id}: CardProps) => {
     
   return (
-    <Link to={`coursedetail/${id}`} className='font-inter'>
+    <div  className='font-inter' data-aos='fade-right'>
+      <Link to={`coursedetail/${id}`}>
       <img src={image} alt="course image" className='rounded-2xl w-full' />
       <h3 className='text-xl lg:text-[22px] font-bold text-black-200 my-1
       '>{topic}</h3>
@@ -36,10 +38,11 @@ const Card = ({topic, instructorName, image, price,id}: CardProps) => {
           </div>
         </div>
       </div>
-      <Link to='reviews' className='underline'>
-        View reviews
       </Link>
-    </Link>
+      <HashLink to={`coursedetail/${id}/#review`} smooth className='underline'>
+        View reviews
+      </HashLink>
+    </div>
   )
 }
 

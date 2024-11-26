@@ -32,7 +32,6 @@ export const whoami = async(urlPath : string)=>{
 
 export const initializePayment = async(amount : number, callback_url : string)=>{
     const response = await axios.post('payment/initialize', {amount, callback_url})
-    console.log(response)
 
     if(response.status !== 200){
         throw new Error('An Error Occurred')
@@ -41,4 +40,40 @@ export const initializePayment = async(amount : number, callback_url : string)=>
     const data = response.data
     return data
     
+}
+
+export const getCoursesData = async (tab : string, searchParam ?: string)=>{
+    let param 
+    if(searchParam){
+        param = `courseName=${searchParam}`
+    }
+    const response = await axios.get(`/courses/getAllcourse?courseLevel=${tab}&${param}`)
+
+    if(response.status !== 200){
+        throw new Error('An Error Occurred')
+    }
+    
+    const data = response.data
+    return data
+}
+
+export const getCourseDetail = async (courseId : string)=>{
+    const response = await axios.get(`/courses/getcourseById?courseId=${courseId}`)
+
+    if(response.status !== 200){
+        throw new Error('An Error Occurred')
+    }
+    
+    const data = response.data
+    return data
+}
+
+export const confirmEmailReq = async(token: string)=>{
+    const response = await axios.get(`/auth/verifyStatus?token=${token}`)
+    if(response.status !== 200){
+        throw new Error('An Error Occurred')
+    }
+    
+    const data = response.data
+    return data
 }

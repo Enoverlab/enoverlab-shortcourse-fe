@@ -15,8 +15,6 @@ const DetailHero = ({enrolled}:detailHeroProps) => {
   const {pathname} = useLocation()
   const {id} = useParams()
   const navigate = useNavigate()
-  console.log(pathname)
-  console.log(id)
   const auth = useAuth()
   const handleEnrollment = async()=>{
     const loggedIn = auth?.isLoggedin
@@ -46,14 +44,10 @@ const DetailHero = ({enrolled}:detailHeroProps) => {
         </h2>
         <div className={clsx("lg:absolute lg:w-[31.9vw] lg:max-w-[460px] px-5 md:px-14 right-[102px] top-28 py-6 lg:px-6 bg-white", enrolled && 'top-28 lg:h-[35.7vw] p-2')}>
           <img src={detailData?.courseImg} alt="" className="w-full h-full object-cover"/>
-          {
-            !enrolled && <>
             <p className="hidden lg:flex text-black-100 text-[42px] font-bold mt-6">₦{detailData?.price?.toLocaleString()}</p>
             <button onClick={handleEnrollment} className="hidden lg:flex justify-center bg-blue-100 text-white border font-bold border-blue-100 hover:text-blue-100 hover:bg-white py-4 mt-2 text-sm lg:text-[26px] w-full rounded-md text-center">
               Enroll Now
             </button>
-            </>
-          }
         </div>
         <div className="lg:w-[50vw] lg:max-w-[720px]  text-white  py-6 space-y-8 md:space-y-9 bg-blue-300">
           <header className="text-[26px] italic font-medium md:font-bold px-5 md:px-14 lg:px-0">
