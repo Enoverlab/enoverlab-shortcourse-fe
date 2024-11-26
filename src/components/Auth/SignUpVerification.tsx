@@ -24,7 +24,7 @@ const SignUpVerification = ({state, isOpen, handleModalClose} : modalProps) => {
         }}
         style={{
           content: {
-            width: mediaMatch?.matches ? '50%' : '80%',
+            width: mediaMatch?.matches ? '60%' : '80%',
             // maxWidth : '760px',
             padding: mediaMatch?.matches
               ? 'clamp(90px,7.803vw,102px) clamp(120px,10.7vw,153px)'

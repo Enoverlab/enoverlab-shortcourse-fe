@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { contextProps,  userprop } from "../declarations";
-import { loginUser, signinUser, whoami } from "../helper/api-communications";
+import { confirmEmailReq, loginUser, signinUser, whoami } from "../helper/api-communications";
 
 interface authProp {
     userData : userprop | undefined
     isLoggedin : boolean
     login : (email : string, password : string, urlPath: string)=> Promise<void>
+    confirmEmail : (token : string) => Promise<void>
     signup : (values :  {email : string, password : string, name : string}, urlPath: string)=> Promise<void>
     logout : ()=> Promise<void>
 }
@@ -42,16 +43,20 @@ export const AuthProvider = ({children}: contextProps)=>{
         }
     }
 
-    const signup = async(values : {email : string, password : string, name ?: string}, urlPath:string)=>{
-        const data = await signinUser({ urlPath, values})
+    const confirmEmail = async(token : string)=>{
+        const data = await confirmEmailReq(token)
         if(data){
             setUserData(data)
             setIsLoggedin(true)
         }
     }
+
+    const signup = async(values : {email : string, password : string, name ?: string}, urlPath:string)=>{
+        await signinUser({ urlPath, values})
+    }
     const logout= async()=>{
     }
-    return(<AuthContext.Provider value={{userData, isLoggedin, login, signup, logout}}>
+    return(<AuthContext.Provider value={{userData, isLoggedin, login, signup, logout, confirmEmail}}>
         {children}
     </AuthContext.Provider>)
 }
