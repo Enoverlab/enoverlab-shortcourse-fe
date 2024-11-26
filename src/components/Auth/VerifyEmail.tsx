@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import loading from '../../assets/landing/loadingspinner.svg'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { confirmEmailReq } from '../../helper/api-communications'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import { useAuth } from '../../context/AuthContext'
 const VerifyEmail = () => {
+    const auth = useAuth()
     const [searchParam] = useSearchParams()
     const token = searchParam.get('token')!
     const navigate = useNavigate()
@@ -14,7 +15,7 @@ const VerifyEmail = () => {
         }
         const confirmEmail = async()=>{
             try {
-                await confirmEmailReq(token)
+                await auth?.confirmEmail(token)
                 toast.success('Email verified successfully')
                 setTimeout(()=>{
                     navigate('/')
@@ -30,7 +31,7 @@ const VerifyEmail = () => {
             }
         }
         confirmEmail()
-    },[token, navigate])
+    },[token, navigate,auth])
   return (
     <div className="h-[80vh] w-full flex items-center justify-center">
       <img src={loading} alt="enoverlab loading" className='w-24 md:w-32' />
