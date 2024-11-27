@@ -72,24 +72,38 @@ const AuthForm = () => {
     const authInstance = gapi.auth2.getAuthInstance();
     authInstance
       .signIn()
-      .then((googleUser:GoogleUser) => {
-        // Extract user profile information
+      .then((googleUser: GoogleUser) => {
         const profile = googleUser.getBasicProfile();
+        const idToken = googleUser.getAuthResponse().id_token;
+  
+        // Log profile data (Optional: Use if you want to show user data on the frontend)
         console.log("Google ID: ", profile.getId());
         console.log("Full Name: ", profile.getName());
         console.log("Email: ", profile.getEmail());
         console.log("Image URL: ", profile.getImageUrl());
-
-        // Extract the token for backend verification (optional)
-        const idToken = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: ", idToken);
-
-        // You can send `idToken` to your backend for verification and user management
+  
+        
+        fetch('http://enoverlab-shortcourse-backend-main.onrender.com/auth/google', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token: idToken }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+           
+            console.log('Backend response: ', data);
+          })
+          .catch((error) => {
+            console.error('Error during backend API request:', error);
+          });
       })
       .catch((error: Error) => {
-        console.error("Google Sign-In Error:", error);
+        console.error('Google Sign-In Error:', error);
       });
   };
+  
 
   const loginInitValues = { email: "", password: "" };
   const signupInitiValues = { ...loginInitValues, name: "", confirmPassword: "" };
