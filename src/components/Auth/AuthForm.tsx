@@ -9,6 +9,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import SignUpVerification from "./SignUpVerification";
+import { gapi } from "gapi-script";
 
 const AuthForm = () => {
   type loginvalues = {
@@ -16,6 +17,8 @@ const AuthForm = () => {
     email: string;
     password: string;
   };
+
+  
 
   type signUpvalues = {
     name: string;
@@ -33,6 +36,7 @@ const AuthForm = () => {
   const auth = useAuth();
   const ref = localStorage.getItem("ref");
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -48,6 +52,43 @@ const AuthForm = () => {
       navigate("404");
     }
   }, [authroute, navigate]);
+
+
+  //google authentication
+  useEffect(() => {
+    // Initialize gapi
+    const initGoogleAPI = () => {
+      gapi.load("auth2", () => {
+        gapi.auth2.init({
+          client_id:  import.meta.env.VITE_CLIENT_ID,
+        });
+      });
+    };
+    initGoogleAPI();
+  }, []);
+
+  const handleGoogleSignIn = () => {
+    const authInstance = gapi.auth2.getAuthInstance();
+    authInstance
+      .signIn()
+      .then((googleUser) => {
+        // Extract user profile information
+        const profile = googleUser.getBasicProfile();
+        console.log("Google ID: ", profile.getId());
+        console.log("Full Name: ", profile.getName());
+        console.log("Email: ", profile.getEmail());
+        console.log("Image URL: ", profile.getImageUrl());
+
+        // Extract the token for backend verification (optional)
+        const idToken = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: ", idToken);
+
+        // You can send `idToken` to your backend for verification and user management
+      })
+      .catch((error) => {
+        console.error("Google Sign-In Error:", error);
+      });
+  };
 
   const loginInitValues = { email: "", password: "" };
   const signupInitiValues = { ...loginInitValues, name: "", confirmPassword: "" };
@@ -194,14 +235,15 @@ const AuthForm = () => {
                 </ErrorMessage>
               </label>
             )}
-            <button
-              className="bg-[#08F] border border-[#08F] w-full text-center text-white text-lg lg:text-xl font-semibold py-3 rounded-[5px] hover:bg-white hover:text-[#08F] transition-all duration-700 disabled:bg-[#4d9add] disabled:hover:bg-[#4d9add] disabled:cursor-not-allowed"
+            <button type="submit"
+              className="bg-[#08F] border border-[#08F] w-full text-center text-white text-lg lg:text-xl font-semibold py-3 rounded-[5px] hover:bg-white hover:text-[#08F] transition-all duration-700 disabled:bg-[#4d9add] disabled:hover:bg-[#4d9add] disabled:cursor-not-allowed" 
               disabled={loading}
             >
               {signup ? "Sign Up" : "Login"}
             </button>
             <p className="text-center my-7 text-lg text-black-200">OR</p>
-            <button className="flex items-center w-full gap-3 justify-center font-semibold text-black-200 text-xl border border-[#626262] rounded-[5px] py-3 transition-all duration-500 hover:bg-slate-400 hover:text-white">
+            <button className="flex items-center w-full gap-3 justify-center font-semibold text-black-200 text-xl border border-[#626262] rounded-[5px] py-3 transition-all duration-500 hover:bg-slate-400 hover:text-white" onClick={handleGoogleSignIn }
+            type="button">
               <img src={googleIcon} alt="" />
               Continue with Google
             </button>
