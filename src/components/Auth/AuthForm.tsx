@@ -19,7 +19,8 @@ const AuthForm = () => {
   };
 
   
-
+  type GoogleUser = gapi.auth2.GoogleUser;
+  
   type signUpvalues = {
     name: string;
     email: string;
@@ -71,7 +72,7 @@ const AuthForm = () => {
     const authInstance = gapi.auth2.getAuthInstance();
     authInstance
       .signIn()
-      .then((googleUser) => {
+      .then((googleUser:GoogleUser) => {
         // Extract user profile information
         const profile = googleUser.getBasicProfile();
         console.log("Google ID: ", profile.getId());
@@ -85,7 +86,7 @@ const AuthForm = () => {
 
         // You can send `idToken` to your backend for verification and user management
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.error("Google Sign-In Error:", error);
       });
   };
