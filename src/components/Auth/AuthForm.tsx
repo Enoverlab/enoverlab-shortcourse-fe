@@ -83,7 +83,7 @@ const AuthForm = () => {
         console.log("Image URL: ", profile.getImageUrl());
   
         
-        fetch('http://enoverlab-shortcourse-backend-main.onrender.com/auth/google', {
+        fetch('https://enoverlab-shortcourse-backend-main.onrender.com/auth/google', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
