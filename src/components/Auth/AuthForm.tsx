@@ -76,7 +76,6 @@ const AuthForm = () => {
         const profile = googleUser.getBasicProfile();
         const idToken = googleUser.getAuthResponse().id_token;
   
-        // Log profile data (Optional: Use if you want to show user data on the frontend)
         console.log("Google ID: ", profile.getId());
         console.log("Full Name: ", profile.getName());
         console.log("Email: ", profile.getEmail());
