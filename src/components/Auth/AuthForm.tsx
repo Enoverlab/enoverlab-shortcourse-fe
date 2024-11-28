@@ -1,4 +1,3 @@
-// Import required dependencies
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
@@ -75,23 +74,30 @@ const AuthForm = () => {
       .then((googleUser: GoogleUser) => {
         const profile = googleUser.getBasicProfile();
         const idToken = googleUser.getAuthResponse().id_token;
-  
-        console.log("Google ID: ", profile.getId());
-        console.log("Full Name: ", profile.getName());
-        console.log("Email: ", profile.getEmail());
-        console.log("Image URL: ", profile.getImageUrl());
-  
+
         
+        const email = profile.getEmail();
+        const name = profile.getName();
+
+        console.log("Google ID: ", profile.getId());
+        console.log("Full Name: ", name);
+        console.log("Email: ", email);
+        console.log("Image URL: ", profile.getImageUrl());
+
+        // Send data to the backend
         fetch('https://enoverlab-shortcourse-backend-main.onrender.com/auth/google', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ token: idToken }),
+          body: JSON.stringify({
+            token: idToken,
+            email,  
+            name,   
+          }),
         })
           .then((response) => response.json())
           .then((data) => {
-           
             console.log('Backend response: ', data);
           })
           .catch((error) => {
@@ -101,7 +107,7 @@ const AuthForm = () => {
       .catch((error: Error) => {
         console.error('Google Sign-In Error:', error);
       });
-  };
+};
   
 
   const loginInitValues = { email: "", password: "" };
