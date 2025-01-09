@@ -62,7 +62,7 @@ const AuthForm = () => {
 
   const handleSignInWithGoogle = async()=>{
     if(auth){
-      await auth?.signInWithGoogle()
+      await auth.signInWithGoogle()
       toast.update('auth', {render: "Signed In Successfully", type: "success", isLoading: false, autoClose : 3000});
       if(ref){
         navigate(ref)
