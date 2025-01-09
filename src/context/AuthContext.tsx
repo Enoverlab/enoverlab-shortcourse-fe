@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { contextProps,  userprop } from "../declarations";
-import { confirmEmailReq, loginUser, signinUser, whoami } from "../helper/api-communications";
+import { confirmEmailReq, logGoogleUser, loginUser, signupUser, whoami } from "../helper/api-communications";
 
 interface authProp {
     userData : userprop | undefined
     isLoggedin : boolean
-    login : (email : string, password : string, urlPath: string)=> Promise<void>
+    login : (email : string, password : string)=> Promise<void>
     confirmEmail : (token : string) => Promise<void>
-    signup : (values :  {email : string, password : string, name : string}, urlPath: string)=> Promise<void>
+    signup : (values :  {email : string, password : string, name : string})=> Promise<void>
+    signInWithGoogle : ()=> Promise<void>
     logout : ()=> Promise<void>
 }
 
@@ -35,8 +36,8 @@ export const AuthProvider = ({children}: contextProps)=>{
         }
     },[])
 
-    const login = async(email:string, password: string, urlPath:string)=>{
-        const data = await loginUser(urlPath, email, password)
+    const login = async(email:string, password: string)=>{
+        const data = await loginUser(email, password)
         if(data){
             setUserData(data)
             setIsLoggedin(true)
@@ -51,12 +52,19 @@ export const AuthProvider = ({children}: contextProps)=>{
         }
     }
 
-    const signup = async(values : {email : string, password : string, name ?: string}, urlPath:string)=>{
-        await signinUser({ urlPath, values})
+    const signup = async(values : {email : string, password : string, name ?: string})=>{
+        await signupUser({values})
+    }
+    const signInWithGoogle = async()=>{
+        const data = await logGoogleUser()
+        if(data){
+            setUserData(data)
+            setIsLoggedin(true)
+        }
     }
     const logout= async()=>{
     }
-    return(<AuthContext.Provider value={{userData, isLoggedin, login, signup, logout, confirmEmail}}>
+    return(<AuthContext.Provider value={{userData, isLoggedin, login, signup, logout, confirmEmail,signInWithGoogle}}>
         {children}
     </AuthContext.Provider>)
 }

@@ -22,73 +22,84 @@ const AuthForm = () => {
     email : string,
     password : string
   }
-    const [login, setLogin] = useState(false)
-    const [signup, setSignup] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [verificationModal, setVerificationModal] = useState(false)
-    const [mode , setMode] = useState('')
-    const {authroute} = useParams()
-    const auth = useAuth()
-    const ref = localStorage.getItem('ref')
-    const navigate = useNavigate()
-    useEffect(()=>{
-      window.scroll(0,0)
-    if((authroute === 'login') || (authroute === 'signup')){
-        if (authroute === 'login'){
-          setLogin(true)
-          setSignup(false)
-        }
-        else if (authroute === 'signup'){
-          setSignup(true)
-          setLogin(false)
-        }
-         
-    }else{
-      navigate('404')
-    }
-    },[authroute, navigate])
+  const [login, setLogin] = useState(false)
+  const [signup, setSignup] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [verificationModal, setVerificationModal] = useState(false)
+  const [mode , setMode] = useState('')
+  const {authroute} = useParams()
+  const auth = useAuth()
+  const ref = localStorage.getItem('ref')
+  const navigate = useNavigate()
+  useEffect(()=>{
+    window.scroll(0,0)
+  if((authroute === 'login') || (authroute === 'signup')){
+      if (authroute === 'login'){
+        setLogin(true)
+        setSignup(false)
+      }
+      else if (authroute === 'signup'){
+        setSignup(true)
+        setLogin(false)
+      }
+        
+  }else{
+    navigate('404')
+  }
+  },[authroute, navigate])
 
-    const loginInitValues = {email : "", password : ""}
-    const signupInitiValues = {...loginInitValues, name :""}
-    const loginValidationSchema = {
-      email : Yup.string().email('Must be a valid email address').trim().lowercase().required('Email input required'),
-      password : Yup.string().trim().required('Password input required'),
-    }
-    const signupValidationSchema = {
-      ...loginValidationSchema,
-      name : Yup.string().trim().required('Name input required')
-    }
+  const loginInitValues = {email : "", password : ""}
+  const signupInitiValues = {...loginInitValues, name :""}
+  const loginValidationSchema = {
+    email : Yup.string().email('Must be a valid email address').trim().lowercase().required('Email input required'),
+    password : Yup.string().trim().required('Password input required'),
+  }
+  const signupValidationSchema = {
+    ...loginValidationSchema,
+    name : Yup.string().trim().required('Name input required')
+  }
 
-    const schemaChoice = signup ? signupValidationSchema : loginValidationSchema
+  const schemaChoice = signup ? signupValidationSchema : loginValidationSchema
+
+  const handleSignInWithGoogle = async()=>{
+    await auth?.signInWithGoogle()
+    toast.update('auth', {render: "Signed In Successfully", type: "success", isLoading: false, autoClose : 3000});
+    if(ref){
+      navigate(ref)
+      localStorage.removeItem('ref')
+    }
+    else{
+      navigate('/')
+      setLoading(false)
+    }
+  }
   return (
     <div className="px-5 lg:px-[6.94vw] lg:py-[7vw]">
       <Formik initialValues ={signupInitiValues } 
       validationSchema={Yup.object(schemaChoice)}
       onSubmit={
         signup ? async( values : signUpvalues )=>{
-            const route = '/auth/signup' 
             setLoading(true)
             try {
               toast.loading('Signing Up', {toastId : 'auth'})
-              await auth?.signup(values, route)
+              await auth?.signup(values)
               setTimeout(async()=>{
                 toast.update('auth', {render: "Signed Up Successfully", type: "success", isLoading: false, autoClose : 3000});
                 setVerificationModal(true)
                 setMode('success')
               }, 1500)
 
-            } catch (error ) {
+            } catch (error) {
               if(error instanceof AxiosError){
                 toast.update('auth', {render: error?.response?.data.message, type: "error", isLoading: false, autoClose : 3000});
                 setLoading(false)
               }
             }
         } : async(values : loginvalues)=>{
-          const route = '/auth/login' 
             setLoading(true)
             try {
               toast.loading('Logining In', {toastId : 'auth'})
-              await auth?.login(values.email,values.password, route)
+              await auth?.login(values.email,values.password)
               setTimeout(async()=>{
                 toast.update('auth', {render: "Signed In Successfully", type: "success", isLoading: false, autoClose : 3000});
                 if(ref){
@@ -147,10 +158,10 @@ const AuthForm = () => {
             <p className="text-center my-7 text-lg text-black-200">
               OR
             </p>
-            <button className="flex items-center w-full gap-3 justify-center font-semibold text-black-200 text-xl border border-[#626262] rounded-[5px] py-3 transition-all duration-500 hover:bg-slate-400 hover:text-white">
+            <div onClick={handleSignInWithGoogle} className="flex items-center w-full gap-3 justify-center font-semibold text-black-200 text-xl border border-[#626262] rounded-[5px] py-3 transition-all duration-500 hover:bg-slate-400 hover:text-white cursor-pointer">
               <img src={googleIcon} alt="" />
               Continue with Google
-            </button>
+            </div>
             {
               login && <p className="text-center text-lg font-medium text-black-100 mt-7">
               Don't have an account? <Link to="/auth/signup"  className="font-bold text-[#002DA4]"> Sign up </Link>
