@@ -27,7 +27,6 @@ export interface dataProps{
 }
 
 export interface loginprop{
-    urlPath : string
     email : string
     password : string
 }
@@ -37,9 +36,7 @@ export interface signUpProp {
         name ?: string
         email : string
         password : string
-    }
-    urlPath : string
-    
+    }  
 }
 export interface userprop{
     id : number,

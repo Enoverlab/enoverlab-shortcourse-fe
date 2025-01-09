@@ -1,8 +1,10 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import {  signUpProp } from '../declarations'
+import { signInWithGooglePopup } from '../../firebase'
+import { getAdditionalUserInfo } from 'firebase/auth'
 
-export const loginUser = async(urlPath: string, email: string, password : string)=>{
-    const response = await axios.post(urlPath, {email, password})
+export const loginUser = async( email: string, password : string)=>{
+    const response = await axios.post('/auth/login', {email, password})
     
     if(response.status !== 200){
         throw new Error('Unable to log in')
@@ -11,8 +13,8 @@ export const loginUser = async(urlPath: string, email: string, password : string
     return data
 }
 
-export const signinUser = async({urlPath, values}: signUpProp)=>{
-    const response = await axios.post(urlPath, values)
+export const signupUser = async({values}: signUpProp)=>{
+    const response = await axios.post('/auth/signup', values)
     console.log(response)
     if(response.status !== 201){
         throw new Error('Unable to Sign Up')
@@ -73,7 +75,34 @@ export const confirmEmailReq = async(token: string)=>{
     if(response.status !== 200){
         throw new Error('An Error Occurred')
     }
-    
     const data = response.data
     return data
 }
+
+export const logGoogleUser = async () => {
+    try {
+        // Authenticate user
+        const response = await signInWithGooglePopup();
+        // get concise information about logged in user
+        const userInfo = getAdditionalUserInfo(response);
+        console.log({response, userInfo})
+        // COlate values and assign to their proper fields
+        const values = {
+            name: userInfo?.profile?.name,
+            email: userInfo?.profile?.email,
+            userimg: userInfo?.profile?.picture,
+            confirmedEmail: userInfo?.profile?.verified_email,
+        };
+        
+        const serverRes = await axios.post('/auth/googleauth', values)
+        const data = serverRes.data
+        return data
+    } catch (error) {
+        console.log(error)
+        if (error instanceof AxiosError){
+            throw new Error(error?.response?.data.message)
+        }
+    }
+    
+    
+  };

@@ -21,7 +21,6 @@ const VerifyEmail = () => {
                     navigate('/')
                 },1500)
             } catch (error) {
-                console.log('here')
                 if(error instanceof AxiosError){
                     toast.error(error?.response?.data.message)
                     setTimeout(()=>{
