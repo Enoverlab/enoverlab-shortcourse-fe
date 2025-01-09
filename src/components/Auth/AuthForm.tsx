@@ -61,16 +61,19 @@ const AuthForm = () => {
   const schemaChoice = signup ? signupValidationSchema : loginValidationSchema
 
   const handleSignInWithGoogle = async()=>{
-    await auth?.signInWithGoogle()
-    toast.update('auth', {render: "Signed In Successfully", type: "success", isLoading: false, autoClose : 3000});
-    if(ref){
-      navigate(ref)
-      localStorage.removeItem('ref')
+    if(auth){
+      await auth?.signInWithGoogle()
+      toast.update('auth', {render: "Signed In Successfully", type: "success", isLoading: false, autoClose : 3000});
+      if(ref){
+        navigate(ref)
+        localStorage.removeItem('ref')
+      }
+      else{
+        navigate('/')
+        setLoading(false)
+      }
     }
-    else{
-      navigate('/')
-      setLoading(false)
-    }
+    
   }
   return (
     <div className="px-5 lg:px-[6.94vw] lg:py-[7vw]">
@@ -201,7 +204,7 @@ const AuthForm = () => {
                   Log in
                 </Link>
               </p>
-            )}
+            }
           </div>
         </Form>
       </Formik>
