@@ -4,23 +4,35 @@ import { signInWithGooglePopup } from '../../firebase'
 import { getAdditionalUserInfo } from 'firebase/auth'
 
 export const loginUser = async( email: string, password : string)=>{
-    const response = await axios.post('/auth/login', {email, password})
-    
-    if(response.status !== 200){
-        throw new Error('Unable to log in')
+    try {
+        const response = await axios.post('/auth/login', {email, password})
+        const data = response.data
+        return data
+    } catch (error) {
+        if (error instanceof AxiosError){
+            if(Array.isArray(error?.response?.data.message)){
+                throw new Error(error?.response?.data.message[0])
+            }
+            throw new Error(error?.response?.data.message)
+        }
     }
-    const data = response.data
-    return data
+
+    
 }
 
 export const signupUser = async({values}: signUpProp)=>{
-    const response = await axios.post('/auth/signup', values)
-    console.log(response)
-    if(response.status !== 201){
-        throw new Error('Unable to Sign Up')
+    try{
+        const response = await axios.post('/auth/signup', values)
+        const data = response.data
+        return data
+    }catch(error){
+        if (error instanceof AxiosError){
+            if(Array.isArray(error?.response?.data.message)){
+                throw new Error(error?.response?.data.message[0])
+            }
+            throw new Error(error?.response?.data.message)
+        }
     }
-    const data = response.data
-    return data
 }
 
 export const whoami = async(urlPath : string)=>{
