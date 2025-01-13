@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import authImg from "../../assets/auth/auth.svg";
 import googleIcon from "../../assets/auth/google.svg";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import SignUpVerification from "./SignUpVerification";
@@ -48,14 +47,16 @@ const AuthForm = () => {
   },[authroute, navigate])
 
   const loginInitValues = {email : "", password : ""}
-  const signupInitiValues = {...loginInitValues, name :""}
+  const signupInitiValues = {...loginInitValues, name :"", confirmPassword : ""}
   const loginValidationSchema = {
     email : Yup.string().email('Must be a valid email address').trim().lowercase().required('Email input required'),
     password : Yup.string().trim().required('Password input required'),
   }
   const signupValidationSchema = {
     ...loginValidationSchema,
-    name : Yup.string().trim().required('Name input required')
+    name : Yup.string().trim().required('Name input required'),
+    confirmPassword : Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords must match').required('Input field required')
   }
 
   const schemaChoice = signup ? signupValidationSchema : loginValidationSchema
@@ -84,18 +85,21 @@ const AuthForm = () => {
       onSubmit={
         signup ? async( values : signUpvalues )=>{
             setLoading(true)
+            
             try {
               toast.loading('Signing Up', {toastId : 'auth'})
               await auth?.signup(values)
+              setVerificationModal(true)
+              setMode('success')
+              toast.update('auth', {render: "Signed Up Successfully", type: "success", isLoading: false, autoClose : 3000});
               setTimeout(async()=>{
-                toast.update('auth', {render: "Signed Up Successfully", type: "success", isLoading: false, autoClose : 3000});
-                setVerificationModal(true)
-                setMode('success')
-              }, 1500)
+                navigate('/')
+                setLoading(false)
+              }, 3000)
 
-            } catch (error) {
-              if(error instanceof AxiosError){
-                toast.update('auth', {render: error?.response?.data.message, type: "error", isLoading: false, autoClose : 3000});
+            } catch (error){
+              if(error instanceof Error){
+                toast.update('auth', {render: error?.message , type: "error", isLoading: false, autoClose : 3000});
                 setLoading(false)
               }
             }
@@ -117,8 +121,8 @@ const AuthForm = () => {
               }, 2500)
 
             } catch (error ) {
-              if(error instanceof AxiosError){
-                toast.update('auth', {render: error?.response?.data.message, type: "error", isLoading: false, autoClose : 3000});
+              if(error instanceof Error){
+                toast.update('auth', {render: error?.message , type: "error", isLoading: false, autoClose : 3000});
                 setLoading(false)
               }
             }
