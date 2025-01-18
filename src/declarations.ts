@@ -16,13 +16,13 @@ export interface chapterProps extends Partial <chapterContextProps>{
 
 export interface dataProps{
     _id : string,
-    topic : string,
+    title : string,
     instructorName : string,
     rating : number,
     price : number,
     category : string,
     courseImg : string
-    details : string,
+    description : string,
     courseMtl ?: chapterProps[]
 }
 

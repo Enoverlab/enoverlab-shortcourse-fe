@@ -3,6 +3,7 @@ import {contextProps, dataProps} from '../declarations'
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { getCourseDetail } from "../helper/api-communications";
+import { toast } from "react-toastify";
 
 interface detailContextProps{
     detailData : dataProps
@@ -27,7 +28,7 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
                     const courseData = await getCourseDetail(id)
                     const userData = auth?.userData
                     setDetailData(courseData)
-                    if(userData?.paidCourses.find((item)=> item.courseId == courseData._id)){
+                    if(userData?.paidCourses.includes(courseData._id)){
                         navigate(`/enrolledcourse/${courseData._id}`)
                     }
                     return
@@ -36,9 +37,10 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
             }
             getData()
         } catch (error) {
+            toast.error('Network error')
             console.log(error)
         }
-    },[id, navigate])
+    },[id, navigate,auth?.userData])
     return(<CourseDetailContext.Provider value={{detailData}}>
         {children}
     </CourseDetailContext.Provider>)

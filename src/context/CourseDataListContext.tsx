@@ -29,8 +29,9 @@ export const CourseDataListProvider = ({children}:contextProps)=>{
     const tab = activeTab
     const param = searchParam
     useEffect(()=>{
-        try {
-            const getData = async ()=>{
+
+        const getData = async ()=>{
+            try {
                 setLoading(true)
                 const data =  await getCoursesData(tab, param)
                 if(data){
@@ -39,13 +40,13 @@ export const CourseDataListProvider = ({children}:contextProps)=>{
                         setLoading(false)
                     }, 3500)
                 }
+            } catch (error) {
+                setLoading(false)
+                toast.error('A network error occured, Refresh again')
+                console.log(error)
             }
-            getData()
-            
-        }catch(error){
-            toast.error('An error Occured, Contact Dev Team')
-            console.log(error)
         }
+        getData()
     },[tab, param])
 
 

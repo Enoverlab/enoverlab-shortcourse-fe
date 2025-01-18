@@ -44,8 +44,8 @@ export const whoami = async(urlPath : string)=>{
     return data
 }
 
-export const initializePayment = async(amount : number, callback_url : string)=>{
-    const response = await axios.post('payment/initialize', {amount, callback_url})
+export const initializePayment = async(amount : number, callback_url : string, courseId : string | undefined)=>{
+    const response = await axios.post('payment/initialize', {amount, callback_url, courseId})
 
     if(response.status !== 200){
         throw new Error('An Error Occurred')
