@@ -76,12 +76,12 @@ const Explore = () => {
                         return idx < dataLength.length
                     }
                     }
-                ).map((course, idx)=> <Card key={idx} image={course.courseImg} instructorName={course.instructorName} topic={course.topic} price={course.price} id={course._id}/> )
+                ).map((course, idx)=> <Card key={idx} image={course.courseImg} instructorName={course.instructorName} topic={course.title} price={course.price} id={course._id}/> )
             }
         </section>
         <div className="flex justify-end mx-5 lg:mx-[12vw] mt-5">
             {
-                !dataLength.expanded && <button className="bg-blue-100 text-white border font-bold border-blue-100 hover:text-blue-100 hover:bg-white py-2 w-[100px] text-sm lg:text-[19px] lg:w-[140px] rounded-md" onClick={handleExpand}>
+                !dataLength.expanded && <button disabled={(data.length < 1)} className="bg-blue-100 text-white border font-bold border-blue-100 hover:text-blue-100 hover:bg-white py-2 w-[100px] text-sm lg:text-[19px] lg:w-[140px] rounded-md disabled:bg-blue-400 disabled:cursor-not-allowed disabled:hover:text-white" onClick={handleExpand}>
                 View all
             </button>
             }
