@@ -18,7 +18,7 @@ const Popular = () => {
             return idx < 3
           }
         }
-        ).map((course, idx)=> <Card key={idx} image={course?.courseImg} instructorName={course?.instructorName} topic={course?.topic} price={course?.price} id={course?._id}/> )
+        ).map((course, idx)=> <Card key={idx} image={course?.courseImg} instructorName={course?.instructorName} topic={course?.title} price={course?.price} id={course?._id}/> )
         }
       </section>
     </div>
