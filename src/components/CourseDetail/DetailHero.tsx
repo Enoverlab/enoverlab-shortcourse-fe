@@ -29,7 +29,7 @@ const DetailHero = ({enrolled}:detailHeroProps) => {
       try {
         const response = await initializePayment(detailData?.price * 100, `https://enoverlab.com`,id)
         const popup = new PaystackPop()
-        popup.resumeTransaction(response.access_code)
+        popup.resumeTransaction(response.access_code).getStatus()
       } catch (error) {
         console.log(error)
       }
