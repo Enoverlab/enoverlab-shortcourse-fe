@@ -42,7 +42,7 @@ export interface userprop{
     id : number,
     name : string,
     email : string,
-    paidCourses : UserPaidCourse[]
+    paidCourses :  UserPaidCourse[]
 }
 
 export interface UserPaidCourse{
@@ -60,8 +60,6 @@ export interface UserPaidCourse{
         },
     ]
 }
-
-
 
 
 export interface contextProps{

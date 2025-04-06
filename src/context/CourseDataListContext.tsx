@@ -47,7 +47,7 @@ export const CourseDataListProvider = ({children}:contextProps)=>{
             }
         }
         getData()
-    },[tab, param])
+    },[tab, param,activeTab])
 
 
 

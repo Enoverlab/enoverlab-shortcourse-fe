@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 interface detailContextProps{
     detailData : dataProps
+    paidCourse : boolean
 }
 
 const CourseDetailContext = createContext<detailContextProps>({} as detailContextProps
@@ -20,6 +21,7 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
     const {id} = useParams()
     const navigate = useNavigate()
     const [detailData, setDetailData] = useState<dataProps>({}as dataProps)
+    const [paidCourse, setPaidCourse] = useState(false)
     const auth = useAuth()
     useEffect(()=>{
         try {
@@ -29,7 +31,7 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
                     const userData = auth?.userData
                     setDetailData(courseData)
                     if(userData?.paidCourses.includes(courseData._id)){
-                        navigate(`/enrolledcourse/${courseData._id}`)
+                        setPaidCourse(true)
                     }
                     return
                 }
@@ -41,7 +43,7 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
             console.log(error)
         }
     },[id, navigate,auth?.userData])
-    return(<CourseDetailContext.Provider value={{detailData}}>
+    return(<CourseDetailContext.Provider value={{detailData, paidCourse}}>
         {children}
     </CourseDetailContext.Provider>)
 }

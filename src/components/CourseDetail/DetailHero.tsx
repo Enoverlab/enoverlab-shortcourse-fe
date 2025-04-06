@@ -6,16 +6,17 @@ import { detailHeroProps } from "../../declarations"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { toast } from "react-toastify"
-import PaystackPop from '@paystack/inline-js'
 import { initializePayment } from "../../helper/api-communications"
 
-
+const appBaseUrl = import.meta.env.VITE_APP_BASE_URL
 const DetailHero = ({enrolled}:detailHeroProps) => {
-  const {detailData} = useContext(CourseDetailContext)
+  const {detailData, paidCourse} = useContext(CourseDetailContext)
   const {pathname} = useLocation()
   const {id} = useParams<string>()
   const navigate = useNavigate()
   const auth = useAuth()
+
+
   const handleEnrollment = async()=>{
     const loggedIn = auth?.isLoggedin
     if(!loggedIn){
@@ -25,16 +26,19 @@ const DetailHero = ({enrolled}:detailHeroProps) => {
       setTimeout(()=>{
         navigate('/auth/login')
       },2000)
+    }else if(paidCourse){
+      navigate(`/enrolledcourse/${id}`)
     }else{
       try {
-        const response = await initializePayment(detailData?.price * 100, `https://enoverlab.com`,id)
-        const popup = new PaystackPop()
-        popup.resumeTransaction(response.access_code).getStatus()
+        const response = await initializePayment(detailData?.price * 100, `${appBaseUrl}enrolledcourse/${id}`,id)
+        // Redirect the user to the Paystack payment page
+        window.location.href = response.authorization_url; 
       } catch (error) {
         console.log(error)
       }
     }
   }
+  if(!detailData) return null
   return (
     <div className="font-inter ">
       <section className=" lg:px-[102px] mt-10 lg:py-24 lg:text-white lg:bg-blue-300 relative ">
