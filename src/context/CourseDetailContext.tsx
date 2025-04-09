@@ -38,9 +38,9 @@ export const CourseDetailProvider  = ({children}:contextProps)=>{
                 navigate('404')
             }
             getData()
-        } catch (error) {
+        } catch {
             toast.error('Network error')
-            console.log(error)
+            navigate('/')
         }
     },[id, navigate,auth?.userData])
     return(<CourseDetailContext.Provider value={{detailData, paidCourse}}>

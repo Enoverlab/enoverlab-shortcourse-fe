@@ -16,10 +16,10 @@ const Layout = () => {
   }, []);
   return (
     <div>
-        <Navbar/>
-        <Outlet/>
-        <ToastContainer/>
-        <ScrollRestoration />
+      <Navbar/>
+      <Outlet/>
+      <ToastContainer/>
+      <ScrollRestoration />
     </div>
   )
 }

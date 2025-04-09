@@ -33,6 +33,8 @@ const DetailHero = ({enrolled}:detailHeroProps) => {
         const response = await initializePayment(detailData?.price * 100, `${appBaseUrl}enrolledcourse/${id}`,id)
         // Redirect the user to the Paystack payment page
         window.location.href = response.authorization_url; 
+        // redirect look
+        // http://localhost:3000/enrolledcourse/67405117d3f79dc0007520bb?trxref=1p80hysbg2&reference=1p80hysbg2
       } catch (error) {
         console.log(error)
       }

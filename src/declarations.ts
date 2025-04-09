@@ -3,15 +3,17 @@ import { ReactNode } from "react"
 
 export interface chapterContextProps {
     activeChapter : number | undefined
-    setActiveChapter : React.Dispatch<React.SetStateAction<number | undefined>>
+    setActiveChapter : React.Dispatch<React.SetStateAction< number | undefined>>
 }
 
-export interface chapterProps extends Partial <chapterContextProps>{
-    idx ?: number,
-    topic : string,
-    duration : string,
-    details : string,
-    videoUrl : string,
+export interface ModuleProps extends Partial <chapterContextProps>{
+    id :  string,
+    idx : number
+    title : string,
+    duration ?: string,
+    content : string,
+    lessonVideo : string,
+    courseId ?: string,
 }
 
 export interface dataProps{
@@ -23,7 +25,7 @@ export interface dataProps{
     category : string,
     courseImg : string
     description : string,
-    courseMtl ?: chapterProps[]
+    modules ?: ModuleProps[]
 }
 
 export interface loginprop{

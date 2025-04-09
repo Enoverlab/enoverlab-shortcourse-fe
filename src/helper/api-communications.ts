@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios'
 import {  signUpProp } from '../declarations'
 import { signInWithGooglePopup } from '../../firebase'
 import { getAdditionalUserInfo } from 'firebase/auth'
+import { toast } from 'react-toastify'
 
 export const loginUser = async( email: string, password : string)=>{
     try {
@@ -80,6 +81,20 @@ export const getCourseDetail = async (courseId : string)=>{
     
     const data = response.data
     return data
+}
+
+export const updateCourseTrack = async (data : {courseId ?: string, moduleId : string, status : string})=>{
+    try {
+        const response = await axios.post(`/courses/update_course_track`,data)
+
+        if(response.status !== 200){
+            throw new Error('An Error Occurred')
+        }
+        
+        toast.success('Module Completed Successfully')
+    } catch {
+        toast.error('Network error occured, Your course update was not saved')
+    }
 }
 
 export const confirmEmailReq = async(token: string)=>{

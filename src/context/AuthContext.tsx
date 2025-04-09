@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { contextProps,  userprop } from "../declarations";
 import { confirmEmailReq, logGoogleUser, loginUser, signupUser, whoami } from "../helper/api-communications";
+import { toast } from "react-toastify";
 
 interface authProp {
     userData : userprop | undefined
@@ -30,8 +31,8 @@ export const AuthProvider = ({children}: contextProps)=>{
             }
             getAuth()
             
-        } catch (error) {
-            console.log(error)
+        } catch {
+            toast.error('Session expired, kindly login')
             setIsLoggedin(false)
         }
     },[])
